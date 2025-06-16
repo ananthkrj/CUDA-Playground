@@ -1,11 +1,10 @@
 #include <stdio.h>
 #include <iostream>
 #include <cuda_runtime.h>
-#include <helper_cuda.h>
 
 // To be finished
 // vector addition
-__global__ void vectorAdd(const float* A, float* B, float* C)
+__global__ void vectorAdd(const float* A, float* B, float* C, int numElements)
 {
     int i = blockDim.x * blockIdx.x + threadIdx.x;
 
