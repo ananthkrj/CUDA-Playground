@@ -33,7 +33,7 @@ int main(void)
 
     // initialize A and B by looping
     // filling host memory allocation 
-    // with values
+    // with factors that multiply
     for (int i = 0; i < rows * cols; i++) {
         // type matching to use f with the literal
         h_A[i] = 1.0f * i;
@@ -84,3 +84,32 @@ int main(void)
     free(h_B);
     free(h_C);
 }
+
+/** 
+ * Compilation done in google collab
+ * Compilation command:
+ * !nvcc -arch=sm_75 -o Element ElementWise.cu
+ * !./Element
+ * 
+ * This outputs:
+ * C[0]0
+ * C[1]2
+ * C[2]8
+ * C[3]18
+ * C[4]32
+ * C[5]50
+ * C[6]72 
+ * C[7]98
+ * C[8]128
+ * C[9]162
+ * C[10]200
+ * C[11]242
+ * 
+ * This represents the Hadamard product or elementwise multiplication
+ * Reasoning and short documentation will be included later
+ * 
+ * Advantage use case: On a CPU this calculation would 
+ * occur sequentially one at a time, on a GPU i am launching
+ * many threads. Computing the multiplication concurrently.
+*/
+
