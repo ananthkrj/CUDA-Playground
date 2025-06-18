@@ -70,7 +70,7 @@ int main() {
     // configure block and grid dimensions (using blockdim and gridim)
     // This launch enough threads to cover the elements
     dim3 blockDim(16, 16);
-    dim3 gridDim((cols + 16) / 15, (rows + 16) / 15);
+    dim3 gridDim((col + 16) / 15, (row + 16) / 15);
 
     // launch the kernel (call kernel function)
     // matrix variables should be called as the device versions
