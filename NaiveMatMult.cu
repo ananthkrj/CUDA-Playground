@@ -7,8 +7,8 @@ __global__ void NaiveMatMult(double* A, double* B, double* C, int N)
 {
     // write a 2 dimensional calculation
     // 
-    int rows = blockIdx.y * blockDim.y + threadIdx.y;
-    int cols = blockIdx.x * blockDim.x + threadIdx.x;
+    int row = blockIdx.y * blockDim.y + threadIdx.y;
+    int col = blockIdx.x * blockDim.x + threadIdx.x;
 
     // N is the size of the matrices
     // A, B, and C are matrices. They are of the size
@@ -42,25 +42,25 @@ int main() {
     // with corresponding values
     // N is just ... which means N x N
     int N = 10;
-    int rows = N;
-    int cols = N;
-    int size = rows * cols * sizeof(double);
+    int row = N;
+    int col = N;
+    int size = row * col * sizeof(double);
 
     // allocate host memory
     // allocate each matrix with the size
     // we just declared
-    int h_A = (double*)malloc(size);
-    int h_B = (double*)malloc(size);
-    int h_C = (double*)mallloc(size);    
+    double* h_A = (double*)malloc(size);
+    double* h_B = (double*)malloc(size);
+    double* h_C = (double*)malloc(size);    
 
     // allocate device memory (cuda)
     // first declare the device variables
     // pass device variable by address
-    int d_A;
+    double* d_A;
     cudaMalloc(&d_A, size);
-    int d_B;
+    double* d_B;
     cudaMalloc(&d_B, size);
-    int d_C;
+    double* d_C;
     cudaMalloc(&d_C, size);
 
     // copy from host to device (cudaMemcpy)
