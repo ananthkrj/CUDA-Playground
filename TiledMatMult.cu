@@ -74,7 +74,7 @@ __global__ void TiledMatMult(float* A, float* B, float* C, int N) {
 
 // function to launch matmult kernel
 // Name this function something other than main
-void launchTiledMatMult(float* h_A, float h_B, float h_C, int N) {
+void launchTiledMatMult(float* h_A, float* h_B, float* h_C, int N) {
     size_t size = N * N * sizeof(float);
 
     // initialize device variables for matrices
@@ -130,7 +130,7 @@ int main() {
 
     // printing result to verify 
     for (int i = 0; i < N; i++) {
-        for (int j = 0; J < N; j++) {
+        for (int j = 0; j < N; j++) {
             std::cout << h_C[i * N + j];
         }
         std::cout << '\n';
