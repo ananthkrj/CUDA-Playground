@@ -113,7 +113,7 @@ int main() {
     // intialize N
     // initialize size again
     // should be multiple of 16
-    int N = 256;
+    int N = 16;
     size_t size = N * N * sizeof(float);
 
     // allocate host memory
@@ -136,7 +136,6 @@ int main() {
         std::cout << '\n';
     }
 
-
     // free host memory
     free(h_A);
     free(h_B);
@@ -144,3 +143,9 @@ int main() {
 
     return 0;
 }
+
+/**
+ * When N is 256, ginormous matrix is computed, efficiently done 
+ * due to gpu
+ * 
+*/
