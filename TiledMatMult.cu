@@ -96,7 +96,7 @@ void launchTiledMatMult(float* h_A, float* h_B, float* h_C, int N) {
     dim3 dimGrid((N + TILE_WIDTH - 1) / TILE_WIDTH, (N + TILE_WIDTH - 1) / TILE_WIDTH);
     
     // launch the kernel
-    TiledMatMult<<<dimGrid, dimBlock>>>(d_A, d_B, d_C, N)
+    TiledMatMult<<<dimGrid, dimBlock>>>(d_A, d_B, d_C, N);
 
     // add error checking later
 
@@ -113,7 +113,7 @@ int main() {
     // intialize N
     // initialize size again
     // should be multiple of 16
-    int N = 256 
+    int N = 256;
     size_t size = N * N * sizeof(float);
 
     // allocate host memory
