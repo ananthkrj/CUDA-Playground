@@ -63,7 +63,7 @@ __global__ void TiledMatMult(float* A, float* B, float* C, int N) {
             acc += Asub[threadIdx.y][j] * Bsub[j][threadIdx.x];
         }
         // synchronize before loading new submatrices
-        __synchthreads();
+        __syncthreads();
     }
 
     // populate C with value of acc
@@ -78,12 +78,12 @@ void launchTiledMatMult(float* h_A, float h_B, float h_C, int N) {
     size_t size = N * N * sizeof(float);
 
     // initialize device variables for matrices
-    float* d_A;
+    float *d_A;
     // alocate using pass by address
     cudaMalloc(&d_A, size);
-    float* d_B;
+    float *d_B;
     cudaMalloc(&d_B, size);
-    float* d_C;
+    float *d_C;
     cudaMalloc(&d_C, size);
 
     // copy from host to device
