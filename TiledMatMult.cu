@@ -148,4 +148,7 @@ int main() {
  * When N is 256, ginormous matrix is computed, efficiently done 
  * due to gpu
  * 
+ * When N is 16, still reasonable large matrix computed but much smaller.alignas
+ * As N grows, it is best to used tiled matmult on a gpu due to advantage thread
+ * processes provide over the CPU
 */
