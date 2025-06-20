@@ -17,7 +17,7 @@ void initMatrix(float* mat, int N) {
 // Split into 3 different functions
 
 // The device Helper for flat 2d access
-__device float getElement(float* matrix, int row, int col, int width) {
+__device__ float getElement(float* matrix, int row, int col, int width) {
     // Assume matrix is a flat 1D array representing a 2D
     // matrix
     return matrix[row * width + col];
@@ -55,7 +55,7 @@ __global__ void TiledMatMult(float* A, float* B, float* C, int N) {
         // then we synchronize to make sure sub matrixes are 
         // loaded before computation
         __syncthreads();
-        
+
         // now multiply the submatrices, performing 
         // partial multiplication
         for (int j = 0; j < TILE_WIDTH; j++) {
