@@ -36,9 +36,9 @@
 */
 
 // declare TILE SIZE as constnat
-#define TILE_SIZE 16;
+#define TILE_SIZE 16
 // Shared memory arrays need to be on compile time
-#define HALO_SIZE 1;
+#define HALO_SIZE 1
 // Shared size is essentially just combining two tiled (times 2)
 #define SHARED_SIZE (TILE_SIZE + 2 * HALO_SIZE)
 
@@ -53,8 +53,9 @@ __global__ void StencilKernel(float* input, float* output, int N, int M) {
     int col = blockIdx.x * blockDim.x + threadIdx.x;
 
     // Shared memory coordinates (where to store the shared memory)
-    int ty = threadIdx.y * HALO_SIZE;
-    int tx = threadIdx.x * HALO_SIZE;
+    // add with hal size
+    int ty = threadIdx.y + HALO_SIZE;
+    int tx = threadIdx.x + HALO_SIZE;
 
     // load into shared memory with halo regions, this computes
     // the halo tiles
@@ -77,7 +78,7 @@ __global__ void StencilKernel(float* input, float* output, int N, int M) {
         // bounds for halo space calculation
         if (Halo_col >= 0 && row < N) {
             // storing in shared memory
-            shared_data[ty][tx - HALO_SIZE] = input[row * M + col];
+            shared_data[ty][tx - HALO_SIZE] = input[row * M + Halo_col];
         // out of bounds halo should be 0
         } else { 
             shared_data[ty][tx - HALO_SIZE] = 0.0f;
@@ -92,7 +93,7 @@ __global__ void StencilKernel(float* input, float* output, int N, int M) {
         int Halo_col = col + HALO_SIZE;
         // store in shared memory
         if (Halo_col < M && row < N) {
-            shared_data[ty][tx + HALO_SIZE] = input[row * M + col];
+            shared_data[ty][tx + HALO_SIZE] = input[row * M + Halo_col];
         // out of bounds halo
         } else {
             shared_data[ty][tx + HALO_SIZE] = 0.0f;
@@ -163,7 +164,7 @@ void LaunchStencilKernel(float *h_input, float *h_output, int N, int M) {
     // Initialiize blockdim and griddim
     dim3 blockDim(TILE_SIZE, TILE_SIZE);
     // use floor function to calculate grid dimensions
-    dim3 gridDim((M + TILE_SIZE - 1 / TILE_SIZE), (N + TILE_SIZE - 1 / TILE_SIZE));
+    dim3 gridDim((M + TILE_SIZE - 1 / TILE_SIZE, N + TILE_SIZE - 1 / TILE_SIZE));
 
     // call stencilkernel using blokcdim gridim, and the kernel parameters
     StencilKernel<<<gridDim, blockDim>>>(d_input, d_output, N, M);
@@ -172,7 +173,7 @@ void LaunchStencilKernel(float *h_input, float *h_output, int N, int M) {
     // need to cudaDeviceSynchronize() after error checking
     cudaError_t err = cudaGetLastError();
     if (err != cudaSuccess) {
-        std::cout << "Kernel Launch error: " << cudaGetErrorString(err); << '\n';
+        std::cout << "Kernel Launch error: " << cudaGetErrorString(err) << '\n';
     }
 
     cudaDeviceSynchronize();
@@ -206,7 +207,7 @@ int main() {
     }
 
     // call helper launch function
-    LaunchStencilKernel(h_input, h_output, N, M)
+    LaunchStencilKernel(h_input, h_output, N, M);
 
     // print results for verification
     std::cout << "Printing only a few values: " << '\n';
