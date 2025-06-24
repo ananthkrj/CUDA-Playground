@@ -210,8 +210,8 @@ int main() {
     LaunchStencilKernel(h_input, h_output, N, M);
 
     // print results for verification
-    std::cout << "Printing only a few values: " << '\n';
-    for (int i = 0; i < 5; i++) {
+    std::cout << "Print All: " << '\n';
+    for (int i = 0; i < N * M; i++) {
         std::cout << i << h_output[i] << '\n';
     }
 
