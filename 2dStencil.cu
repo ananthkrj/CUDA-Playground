@@ -1,40 +1,6 @@
 #include <iostream>
 #include <cuda_runtime.h>
 
-/**
- * Plan:
- *      
- * stencil kernel: 
- * Initializing thread dimensions
- * 
- * stencil logic
- * 
- * 
- * Helper function to launch kernel:
- * Allocating size
- * 
- * Device memory allocation
- *
- * initializing grid dimensions and block
- * dimensions
- * 
- * calling kernel using dimensions
- * 
- * error checking
- * 
- * freeing device memory
- * 
- * 
- * Main function:
- * initilaizing variables and size
- * 
- * allocating host memory
- * 
- * launching helper function
- * 
- * freeing hosting memory
-*/
-
 // declare TILE SIZE as constnat
 #define TILE_SIZE 16
 // Shared memory arrays need to be on compile time
@@ -164,7 +130,8 @@ void LaunchStencilKernel(float *h_input, float *h_output, int N, int M) {
     // Initialiize blockdim and griddim
     dim3 blockDim(TILE_SIZE, TILE_SIZE);
     // use floor function to calculate grid dimensions
-    dim3 gridDim((M + TILE_SIZE - 1 / TILE_SIZE, N + TILE_SIZE - 1 / TILE_SIZE));
+    dim3 gridDim((M + TILE_SIZE - 1) / TILE_SIZE, 
+                 (N + TILE_SIZE - 1) / TILE_SIZE);
 
     // call stencilkernel using blokcdim gridim, and the kernel parameters
     StencilKernel<<<gridDim, blockDim>>>(d_input, d_output, N, M);
@@ -221,3 +188,7 @@ int main() {
 
     return 0;
 }
+
+/**
+ * Output is printed, explain how it works in documentation
+*/
