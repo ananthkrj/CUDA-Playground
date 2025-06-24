@@ -137,8 +137,8 @@ __global__ void StencilKernel(float* input, float* output, int N, int M) {
     if (row < N && col < M) {
         // bounds
         // store loaded shared memory into a float value called result
-        float result = shared_data[ty][tx] + shared_data[ty - 1][tx] + shared[ty + 1][tx] + 
-                       shared[ty][tx - 1] + shared[ty][tx + 1];
+        float result = shared_data[ty][tx] + shared_data[ty - 1][tx] + shared_data[ty + 1][tx] + 
+                       shared_data[ty][tx - 1] + shared_data[ty][tx + 1];
         
         // store result in the output array
         output[row * M + col] = result;
@@ -158,7 +158,7 @@ void LaunchStencilKernel(float *h_input, float *h_output, int N, int M) {
     cudaMalloc(&d_output, size);
 
     // Use CudaMemcpy to copy from host to device memory
-    cudaMemcpy(d_input, h_input, size);
+    cudaMemcpy(d_input, h_input, size, cudaMemcpyHostToDevice);
 
     // Initialiize blockdim and griddim
     dim3 blockDim(TILE_SIZE, TILE_SIZE);
@@ -178,7 +178,7 @@ void LaunchStencilKernel(float *h_input, float *h_output, int N, int M) {
     cudaDeviceSynchronize();
 
     // copy from device to host (overall value)
-    cudaMemcpy(h_output, d_output, size);
+    cudaMemcpy(h_output, d_output, size, cudaMemcpyDeviceToHost);
 
     // free device memory
     cudaFree(d_input);
@@ -197,7 +197,7 @@ int main() {
 
     // allocate host memory
     float* h_input = (float*)malloc(size);
-    float* h_input = (float*)malloc(size);
+    float* h_output = (float*)malloc(size);
 
     // intiialize input with test data
     for (int i = 0; i < N * M; i++) {
